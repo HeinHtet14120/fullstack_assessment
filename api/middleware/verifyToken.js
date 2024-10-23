@@ -30,3 +30,25 @@ export const verifyToken = (requiredRole) => {
     }
 
 };
+
+export const getUserIdFromToken = (req, res, next) => {
+    
+        const token = req.cookies.token;
+
+        console.log("this is token : ", token)
+        
+        if (!token) return res.status(401).json({ message: "Not Authenticated" });
+
+        try {
+            const user = jwt.verify(token, jwtSecretKey);
+            console.log("this is user : ", user)
+
+            req.user = user.id; 
+            next();
+        }
+
+        catch (err) {
+            console.error(err);
+            res.status(400).json({ message: "Invalid token." });
+        }
+};
