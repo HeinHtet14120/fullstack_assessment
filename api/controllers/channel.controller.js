@@ -14,12 +14,14 @@ export const getChannel = async (req, res) => {
         if (!channel) {
             return res.status(404).json({ message: "Channel not found!" });
         }
-
+    
         if (!channel.members.includes(tokenUserId)) {
-            return res.status(400).json({ message: "User is not a member of this channel!" });
+            const isMember = false;
+            return res.status(200).json({ channel, isMember });
         }
-
-        res.status(200).json(channel)
+    
+        const isMember = true;
+        return res.status(200).json({ channel, isMember });
 
     } catch (err) {
         console.log(err)
