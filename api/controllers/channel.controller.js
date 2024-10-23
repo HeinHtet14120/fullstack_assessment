@@ -50,7 +50,8 @@ export const getUserChannels = async (req, res) => {
             where: {
                 members: {
                     has: tokenUserId
-                }
+                },
+                isPrivate: true
             },
             select: {
                 id: true,
@@ -163,6 +164,7 @@ export const deleteChannel = async (req, res) => {
         await prisma.channel.delete({
             where: { id }
         });
+
         res.status(200).json({ message: "Channel deleted!" });
     } catch (err) {
         console.log(err);

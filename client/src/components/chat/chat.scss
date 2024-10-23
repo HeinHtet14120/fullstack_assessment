@@ -1,0 +1,41 @@
+.messages {
+    flex-grow: 1;
+    overflow-y: auto;
+    margin-bottom: 20px;
+    background-color: #f9f9f9;
+    padding: 10px;
+    border-radius: 5px;
+    border: 1px solid #ddd;
+  
+    .channel {
+      margin: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 5px;
+      padding: 10px;
+      border-radius: 6px;
+      border: 1px solid gray;
+      cursor: pointer;
+  
+      img {
+        width: 50px;
+        height: 50px;
+      }
+  
+      .channel_name {
+        flex-grow: 1;
+      }
+  
+      .delete-icon {
+        cursor: pointer;
+        color: #ed070b; // Set a color for the delete icon
+        transition: color 0.3s ease;
+  
+        &:hover {
+          color: #ba0704; // Change color on hover
+        }
+      }
+    }
+  }
+  
