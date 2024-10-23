@@ -8,30 +8,36 @@ import Forex from '../../components/forex/forex';
 import Chat from '../../components/chat/chat';
 
 const Home = () => {
-
   const { currentUser, updateUser } = useContext(AuthContext);
-
   const [error, setError] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const [channels, setChannels] = useState([])
-  const [selectedChannelId, setSelectedChannelId] = useState(null); 
+  const [selectedChannelId, setSelectedChannelId] = useState(null);
+  const navigate = useNavigate();
 
   const handleChannelClick = (channelId) => {
-    setSelectedChannelId(channelId); 
+    setSelectedChannelId(channelId);
   };
-  
 
   return (
-    <div className="main-layout">
-      <Channel onChannelClick={handleChannelClick}/>
-      <div className="chat-area">
-        <div className="user-info">User: {currentUser.username}</div>
-        <Chat channelId={selectedChannelId} role={currentUser.role}/>
-        <input type="text" className="input-message" placeholder="Input message..." />
-      </div>
-      <Forex />
+    <>
+      {
+        currentUser ? <div className="main-layout">
+          < Channel onChannelClick={handleChannelClick} />
+          <div className="chat-area">
+            <div className="user-info">User: {currentUser.username}</div>
+            <Chat channelId={selectedChannelId} role={currentUser.role} />
+            {/* <input type="text" className="input-message" placeholder="Input message..." /> */}
+          </div>
+          <Forex />
 
-    </div>
+        </div >
+          :
+          <Navigate to={'/login'} />
+      }
+    </>
+
+
 
   )
 }

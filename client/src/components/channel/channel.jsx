@@ -18,7 +18,7 @@ const Channel = ({ onChannelClick }) => {
 
   useEffect(() => {
     const fetchChannels = async () => {
-      setError("");
+      
       setIsLoading(true);
 
       try {

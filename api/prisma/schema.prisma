@@ -24,6 +24,8 @@ model User {
   memberOfChannels String[]
 
   Channel Channel[]
+
+  Message Message[]
 }
 
 model Channel {
@@ -33,7 +35,20 @@ model Channel {
   user       User          @relation(fields: [created_by], references: [id])
   created_by String        @db.ObjectId
   members    String[]
+
+  Message Message[]
 }
+
+model Message {
+  id         String   @id @default(auto()) @map("_id") @db.ObjectId
+  message    String
+  sender     User     @relation(fields: [senderId], references: [id])
+  senderId   String   @db.ObjectId
+  channel    Channel  @relation(fields: [channelId], references: [id])
+  channelId  String   @db.ObjectId
+  timestamp  DateTime @default(now())
+}
+
 
 // model UserChannel {
 //   id        String  @id @default(auto()) @map("_id") @db.ObjectId
