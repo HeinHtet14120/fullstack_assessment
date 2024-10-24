@@ -2,13 +2,14 @@ import React, { useEffect, useState, useContext, useRef } from "react";
 import { AuthContext } from "../../context/AuthContext";
 import { SocketContext } from "../../context/SocketContext";
 import apiRequest from "../../lib/apiRequest";
+import useNotificationStore from "../../lib/notificationStore";
 import './chat.scss';
 import { format } from 'timeago.js'
 
 const Chat = ({ channelId, role }) => {
   const { currentUser } = useContext(AuthContext);
   const { socket } = useContext(SocketContext);
-  const [chat, setChat] = useState(null);
+  const addNotification = useNotificationStore((state) => state.addNotification);
   const [messages, setMessages] = useState([]);
   const [data, setData] = useState({});
   const messageEndRef = useRef();
@@ -58,12 +59,12 @@ const Chat = ({ channelId, role }) => {
     if (!text) return;
     try {
       const res = await apiRequest.post(`/messages/${channelId}`, { text });
-      setMessages((prev) => [...prev, res.data]);
+
+      setMessages((prev) => [...prev, { ...res.data, senderId: currentUser.id }]);
 
       socket.emit("sendMessage", {
         channelId,
-        message: res.data,
-        sender: currentUser,
+        message: { ...res.data, senderId: currentUser.id },
       });
 
       e.target.reset();
@@ -72,11 +73,22 @@ const Chat = ({ channelId, role }) => {
     }
   };
 
+
   useEffect(() => {
     if (socket) {
       socket.on("getMessage", (data) => {
         if (data.channelId === channelId) {
           setMessages((prev) => [...prev, data.message]);
+        }
+
+        if (data.message.senderId !== currentUser.id) {
+
+          console.log("this is data noti : ", data)
+          addNotification({
+            sender: data.message.sender,
+            channelId: data.channelId
+          });
+
         }
       });
     }
@@ -86,7 +98,7 @@ const Chat = ({ channelId, role }) => {
         socket.off("getMessage");
       }
     };
-  }, [socket, channelId]);
+  }, [socket, channelId, addNotification]);
 
   return (
     <div className="chat-container">
@@ -108,8 +120,8 @@ const Chat = ({ channelId, role }) => {
           <div className="messages">
             {messages.map((msg) => (
               <div key={msg.id} className={`message ${msg.senderId === currentUser.id ? 'self' : ''}`}>
-                <div><span className="sender">{msg.sender} </span><span className="time">{format(msg.timestamp)}</span></div>
-                 <div>{msg.message}</div>
+                <div><span className="sender">{msg?.sender} </span><span className="time">{format(msg.timestamp)}</span></div>
+                <div>{msg.message}</div>
               </div>
             ))}
             <div ref={messageEndRef} />

@@ -264,4 +264,33 @@ export const leaveChannel = async (req, res) => {
     }
 };
 
+export const isChannelMember = async (req, res) => {
+    const id = req.params.id;
+    const tokenUserId = req.user; 
+
+    try {
+        const channel = await prisma.channel.findUnique({
+            where: { id },
+        });
+
+        if (!channel) {
+            return res.status(404).json({ message: "Channel not found!" });
+        }
+
+        if (!channel.members.includes(tokenUserId)) {
+            return res.status(403).json({ message: "User is not a member of this channel." });
+        }
+
+        return res.status(200).json({
+            message: "User is a member of the channel.",
+            channelName: channel.name,
+        });
+    } catch (err) {
+        console.log(err);
+        return res.status(500).json({ message: "Error checking channel membership", error: err.message });
+    }
+};
+
+
+
 

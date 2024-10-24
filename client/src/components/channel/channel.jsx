@@ -4,6 +4,7 @@ import './channel.scss';
 import { FaTrash } from 'react-icons/fa';
 import apiRequest from '../../lib/apiRequest';
 import { AuthContext } from '../../context/AuthContext';
+import Notification from '../notification/notification';
 
 const Channel = ({ onChannelClick }) => {
   const { currentUser, updateUser } = useContext(AuthContext);
@@ -156,6 +157,7 @@ const Channel = ({ onChannelClick }) => {
         </div>
       )}
 
+      <Notification onChannelClick={onChannelClick}/>
       <div className="logout-container">
         <button className="logout-button" onClick={handleLogout}>Logout</button>
       </div>

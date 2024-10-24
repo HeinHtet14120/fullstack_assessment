@@ -10,7 +10,6 @@ const Forex = () => {
 
         socket.on('forexUpdate', (data) => {
             setForexData(data);
-            console.log(forexData)
         });
 
         return () => {
