@@ -2,9 +2,9 @@ import prisma from '../lib/prisma.js';
 import { format } from 'date-fns';
 
 export const addMessage = async (req, res) => {
-  const { id } = req.params; 
-  const { text } = req.body;  
-  const userId = req.user;   
+  const { id } = req.params;
+  const { text } = req.body;
+  const userId = req.user;
 
   try {
     const channel = await prisma.channel.findUnique({
@@ -30,7 +30,22 @@ export const addMessage = async (req, res) => {
       }
     });
 
-    res.status(200).json(newMessage);
+    // Fetch user details to include in the response
+    const sender = await prisma.user.findUnique({
+      where: {
+        id: userId
+      },
+      select: {
+        id: true,
+        username: true // Assuming you have a username field
+      }
+    });
+
+    // Include sender details in the response
+    res.status(200).json({
+      ...newMessage,
+      sender: sender.username // Include the sender's username in the response
+    });
   } catch (err) {
     console.error(err);
     res.status(500).json({ message: "Error saving message", error: err.message });
@@ -61,13 +76,13 @@ export const getMessages = async (req, res) => {
       include: {
         sender: {
           select: {
-            username: true, 
+            username: true,
           },
         },
       },
     });
 
-  
+
     const formattedMessages = messages.map((msg) => ({
       id: msg.id,
       message: msg.message,
