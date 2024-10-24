@@ -1,105 +1,94 @@
 .chat-container {
-
-
   display: flex;
   flex-direction: column;
-  justify-content: space-between;
   height: 100%;
 
+  .channel-header {
+    font-size: 24px;
+    font-weight: bold;
+    color: #333;
+    padding: 10px;
+    text-align: center;
+  }
+
+  .channel-header .channel-name {
+    color: #2c3e50;
+  }
+
+  .channel-header .default-room {
+    color: #7f8c8d;
+    font-style: italic;
+  }
+
+
   .messages {
-    // flex-grow: 1;
-    // overflow-y: auto;
-    // margin-bottom: 20px;
-    // padding: 10px;
-    // border-radius: 5px;
-    // border: 1px solid #ddd;
+    flex-grow: 1;
+    overflow-y: scroll;
+    margin-bottom: 5px;
+    padding: 10px;
+    border-radius: 5px;
+    height: 600px; 
+    scroll-behavior: smooth;
 
-    .channel {
-      margin: 10px;
+    .message {
       display: flex;
-      align-items: center;
-      justify-content: space-between;
+      flex-direction: column;
+      align-items: baseline;
+      padding: 7px 12px;
+      margin-bottom: 2px;
+      border-radius: 8px;
       gap: 5px;
-      padding: 10px;
-      border-radius: 6px;
-      // border: 1px solid gray;
-      cursor: pointer;
 
-      img {
-        width: 50px;
-        height: 50px;
+      &.self {
+        background-color: #e0ffe0;
       }
 
-      .channel_name {
-        flex-grow: 1;
-      }
-
-      .delete-icon {
+      .sender {
+        font-size: 15px;
+        font-weight: bold;
+        margin-right: 2px;
+        color: #333;
+        text-decoration: none;
         cursor: pointer;
-        color: #ed070b; // Set a color for the delete icon
-        transition: color 0.3s ease;
-
-        &:hover {
-          color: #ba0704; // Change color on hover
-        }
+      }
+      .sender:hover {
+        text-decoration: underline;
+      }
+      .time {
+        font-size: 10px;
+        font-weight: 800;
+        margin-right: 5px;
+        color: #7f7c7c;
       }
     }
   }
 
   .message-form {
-    width: 100%;
     display: flex;
-    justify-content: center;
     gap: 20px;
+    padding: 10px;
 
     .input-message {
-      width: 80%;
+      flex-grow: 1;
+      padding: 10px;
+      border-radius: 4px;
+      border: 1px solid #ccc;
+      font-size: 16px;
     }
 
     button {
-      align-items: center;
-      appearance: none;
-      background-color: #FCFCFD;
+      padding: 10px 20px;
+      background-color: #5f9ea0;
+      border: none;
       border-radius: 4px;
-      border-width: 0;
-      box-shadow: rgba(45, 35, 66, 0.4) 0 2px 4px, rgba(45, 35, 66, 0.3) 0 7px 13px -3px, #D6D6E7 0 -3px 0 inset;
-      box-sizing: border-box;
-      color: #36395A;
+      color: white;
+      font-size: 16px;
       cursor: pointer;
-      display: inline-flex;
-      font-family: "JetBrains Mono", monospace;
-      height: 48px;
-      justify-content: center;
-      line-height: 1;
-      list-style: none;
-      overflow: hidden;
-      padding-left: 16px;
-      padding-right: 16px;
-      position: relative;
-      text-align: left;
-      text-decoration: none;
-      transition: box-shadow .15s, transform .15s;
-      user-select: none;
-      -webkit-user-select: none;
-      touch-action: manipulation;
-      white-space: nowrap;
-      will-change: box-shadow, transform;
-      font-size: 18px;
-    }
+      transition: background-color 0.3s ease;
 
-    .button:focus {
-      box-shadow: #D6D6E7 0 0 0 1.5px inset, rgba(45, 35, 66, 0.4) 0 2px 4px, rgba(45, 35, 66, 0.3) 0 7px 13px -3px, #D6D6E7 0 -3px 0 inset;
-    }
-
-    .button:hover {
-      box-shadow: rgba(45, 35, 66, 0.4) 0 4px 8px, rgba(45, 35, 66, 0.3) 0 7px 13px -3px, #D6D6E7 0 -3px 0 inset;
-      transform: translateY(-2px);
-    }
-
-    .button:active {
-      box-shadow: #D6D6E7 0 3px 7px inset;
-      transform: translateY(2px);
+      &:hover {
+        background-color: #538b92;
+      }
     }
   }
-
 }

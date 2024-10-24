@@ -1,7 +1,8 @@
 const { Server } = require("socket.io");
 const http = require("http");
 const cors = require("cors");
-const express = require("express")
+const express = require("express");
+let forexPairs = require("./dummy");
 
 const app = express();
 app.use(cors());
@@ -15,16 +16,26 @@ const io = new Server(server, {
   },
 });
 
-io.on("connection", (socket) => {
-  console.log("A user connected", socket.id);
+setInterval(() => {
+  const timestamp = new Date().toISOString();
+  forexPairs = forexPairs.map(currency => ({
+    ...currency,
+    bid: (parseFloat(currency.bid) + (Math.random() - 0.5) * 0.01).toFixed(4),
+    ask: (parseFloat(currency.ask) + (Math.random() - 0.5) * 0.01).toFixed(4),
+    timestamp
+  }));
+  io.emit("forexUpdate", forexPairs);
+}, 1000);
 
-  // Listening for messages
+io.on("connection", (socket) => {
+  console.log("connected", socket.id);
+
+  socket.emit("forexUpdate", forexPairs);
+
   socket.on("sendMessage", (data) => {
     const { receiverId, message } = data;
-    io.emit("getMessage", data); // Send message to all connected clients
+    io.emit("getMessage", data);
 
-    // Optionally, you can add logic to emit messages to specific rooms/users.
-    // socket.to(receiverId).emit("getMessage", message);
   });
 
   socket.on("disconnect", () => {

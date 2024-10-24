@@ -77,7 +77,7 @@ export const createChannel = async (req, res) => {
             data: {
                 ...body,
                 created_by: tokenUserId,
-                members: [tokenUserId], // Automatically add the creator as a member
+                members: [tokenUserId],
             }
         });
 
@@ -86,7 +86,7 @@ export const createChannel = async (req, res) => {
                 where: { id: tokenUserId },
                 data: {
                     createdChannels: {
-                        push: newChannel.id  // Connect the new channel to the user
+                        push: newChannel.id 
                     }
                 }
             });

@@ -27,7 +27,6 @@ const Home = () => {
           <div className="chat-area">
             <div className="user-info">User: {currentUser.username}</div>
             <Chat channelId={selectedChannelId} role={currentUser.role} />
-            {/* <input type="text" className="input-message" placeholder="Input message..." /> */}
           </div>
           <Forex />
 
