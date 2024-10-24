@@ -24,11 +24,9 @@
         }
   
         select {
-            /* Reset */
             appearance: none;
             border: 0;
             outline: 0;
-            /* Personalize */
             padding: 1rem 4rem 1rem 1rem;
             background: url(https://upload.wikimedia.org/wikipedia/commons/9/9d/Caret_down_font_awesome_whitevariation.svg) no-repeat right 0.8em center / 1.4em,
               linear-gradient(to left, rgba(255, 255, 255, 0.3) 3em, rgba(255, 255, 255, 0.2) 3em);
@@ -36,15 +34,12 @@
             border-radius: 0.25em;
             border: 1px solid gray;;
             cursor: pointer;
-            /* Remove IE arrow */
             &::-ms-expand {
               display: none;
             }
-            /* Remove focus outline */
             &:focus {
               outline: none;
             }
-            /* <option> colors */
             option {
               color: inherit;
               background-color: white;

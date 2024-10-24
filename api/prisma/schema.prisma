@@ -36,7 +36,7 @@ model Channel {
   created_by String        @db.ObjectId
   members    String[]
 
-  Message Message[]
+  Message Message[]        
 }
 
 model Message {
@@ -49,13 +49,3 @@ model Message {
   timestamp  DateTime @default(now())
 }
 
-
-// model UserChannel {
-//   id        String  @id @default(auto()) @map("_id") @db.ObjectId
-//   user      User    @relation(fields: [userId], references: [id])
-//   channel   Channel @relation(fields: [channelId], references: [id])
-//   userId    String  @db.ObjectId
-//   channelId String  @db.ObjectId
-
-//   @@unique([userId, channelId])
-// }

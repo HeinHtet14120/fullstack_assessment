@@ -5,6 +5,8 @@ import apiRequest from "../../lib/apiRequest";
 import useNotificationStore from "../../lib/notificationStore";
 import './chat.scss';
 import { format } from 'timeago.js'
+import { useNavigate } from "react-router-dom";
+import { FaSignOutAlt } from "react-icons/fa";
 
 const Chat = ({ channelId, role }) => {
   const { currentUser } = useContext(AuthContext);
@@ -13,6 +15,7 @@ const Chat = ({ channelId, role }) => {
   const [messages, setMessages] = useState([]);
   const [data, setData] = useState({});
   const messageEndRef = useRef();
+  const navigate = useNavigate();
 
   useEffect(() => {
     messageEndRef.current?.scrollIntoView({ behavior: "smooth" });
@@ -100,20 +103,34 @@ const Chat = ({ channelId, role }) => {
     };
   }, [socket, channelId, addNotification]);
 
+  const handleLeaveChannel = async (e) => {
+    e.preventDefault();
+    try {
+      const response = await apiRequest.post('/channel/user/leave', { id:channelId });
+      console.log("this is leave : ",response)
+      navigate('/')
+    } catch (err) {
+      console.log(err);
+    }
+  };
+
   return (
     <div className="chat-container">
 
       {data && data.channel ? (
         <div className="channel-header">
           <span className="channel-name">{data.channel.name}</span>
+          {data.isMember && currentUser.role !== "admin" && (
+            <button className="leave-button" onClick={handleLeaveChannel}>
+              <FaSignOutAlt className="icon" />
+            </button>
+          )}
         </div>
       ) : (
         <div className="channel-header">
           <span className="default-room">Forex Room</span>
         </div>
       )}
-
-
 
       {
         channelId && <>

@@ -3,7 +3,6 @@ import { Layout, RequireAuth } from './routes/layout/layout'
 import Login from './routes/login/login'
 import Register from './routes/register/register'
 import Home from './routes/home/home'
-import Test from './routes/test/test'
 
 function App() {
 

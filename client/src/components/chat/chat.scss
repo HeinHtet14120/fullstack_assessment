@@ -4,21 +4,45 @@
   height: 100%;
 
   .channel-header {
-    font-size: 24px;
-    font-weight: bold;
-    color: #333;
-    padding: 10px;
-    text-align: center;
+    display: flex;
+    justify-content: space-between; 
+    align-items: center; 
+    padding: 10px 15px; 
+    
+    .channel-name {
+      font-size: 1.5rem; 
+      font-weight: bold; 
+      color: #333; 
+    }
+  
+    .default-room {
+      font-size: 1.5rem; 
+      font-weight: bold;
+      color: #333;
+    }
+  
+    .leave-button {
+      display: flex; 
+      align-items: center; 
+      padding: 5px 10px; 
+      border: none; 
+      border-radius: 5px; 
+      background-color: #ff4d4d; 
+      color: white; 
+      cursor: pointer; 
+      transition: background-color 0.3s ease; 
+  
+      &:hover {
+        background-color: #ff1a1a; 
+      }
+  
+      .icon {
+        margin-right: 5px;
+        font-size: 1.2rem;
+      }
+    }
   }
-
-  .channel-header .channel-name {
-    color: #2c3e50;
-  }
-
-  .channel-header .default-room {
-    color: #7f8c8d;
-    font-style: italic;
-  }
+  
 
 
   .messages {

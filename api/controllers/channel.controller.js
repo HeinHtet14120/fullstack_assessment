@@ -1,33 +1,34 @@
 import prisma from '../lib/prisma.js';
+import { ObjectId } from 'mongodb';
 
 export const getChannel = async (req, res) => {
     const id = req.params.id;
     const tokenUserId = req.user;
-    try {
 
+    if (!ObjectId.isValid(id)) {
+        return res.status(400).json({ message: "Invalid channel ID format." });
+    }
+
+    try {
         const channel = await prisma.channel.findUnique({
             where: {
                 id
             }
-        })
+        });
 
         if (!channel) {
             return res.status(404).json({ message: "Channel not found!" });
         }
-    
-        if (!channel.members.includes(tokenUserId)) {
-            const isMember = false;
-            return res.status(200).json({ channel, isMember });
-        }
-    
-        const isMember = true;
+
+        const isMember = channel.members.includes(tokenUserId);
         return res.status(200).json({ channel, isMember });
 
     } catch (err) {
-        console.log(err)
-        res.status(500).json({ message: "Failed to get channel !" })
+        console.log(err);
+        return res.status(500).json({ message: "Failed to get channel!" });
     }
-}
+};
+
 
 export const getPublicChannels = async (req, res) => {
     try {
@@ -86,7 +87,7 @@ export const createChannel = async (req, res) => {
                 where: { id: tokenUserId },
                 data: {
                     createdChannels: {
-                        push: newChannel.id 
+                        push: newChannel.id
                     }
                 }
             });
@@ -145,7 +146,6 @@ export const updateChannel = async (req, res) => {
     }
 };
 
-
 export const deleteChannel = async (req, res) => {
     const id = req.params.id;
     const tokenUserId = req.user.id;
@@ -163,6 +163,10 @@ export const deleteChannel = async (req, res) => {
             return res.status(403).json("Not Authorized");
         }
 
+        await prisma.message.deleteMany({
+            where: { channelId: id }
+        });
+
         await prisma.channel.delete({
             where: { id }
         });
@@ -174,12 +178,12 @@ export const deleteChannel = async (req, res) => {
     }
 };
 
+
 export const joinChannel = async (req, res) => {
     const { id } = req.body;
     const tokenUserId = req.user;
 
     try {
-
         const channel = await prisma.channel.findUnique({
             where: { id },
         });
@@ -197,26 +201,34 @@ export const joinChannel = async (req, res) => {
             data: {
                 members: {
                     push: tokenUserId,
-                }
-            }
-        })
+                },
+            },
+        });
 
         await prisma.user.update({
             where: { id: tokenUserId },
             data: {
                 memberOfChannels: {
                     push: id,
-                }
-            }
+                },
+            },
         });
 
-        res.status(200).json({ message: "Joined to the channel!" });
+        const updatedChannel = await prisma.channel.findUnique({
+            where: { id }
+        });
+
+        res.status(200).json({
+            message: "Joined to the channel!",
+            channel: updatedChannel
+        });
 
     } catch (err) {
         console.log(err);
         res.status(500).json({ message: "Failed to join channel!" });
     }
-}
+};
+
 
 export const leaveChannel = async (req, res) => {
     const { id } = req.body;
@@ -266,7 +278,7 @@ export const leaveChannel = async (req, res) => {
 
 export const isChannelMember = async (req, res) => {
     const id = req.params.id;
-    const tokenUserId = req.user; 
+    const tokenUserId = req.user;
 
     try {
         const channel = await prisma.channel.findUnique({
@@ -290,6 +302,33 @@ export const isChannelMember = async (req, res) => {
         return res.status(500).json({ message: "Error checking channel membership", error: err.message });
     }
 };
+
+export const getNotMemberChannels = async (req, res) => {
+    const tokenUserId = req.user;
+    try {
+        const channels = await prisma.channel.findMany({
+            where: {
+                AND: [
+                    {
+                        NOT: {
+                            members: {
+                                has: tokenUserId
+                            }
+                        }
+                    },
+                    {
+                        isPrivate: true
+                    }
+                ]
+            }
+        });
+
+        return res.status(200).json({ channels });
+    } catch (err) {
+        console.log(err);
+        return res.status(500).json({ message: "Error getting available channel", error: err.message });
+    }
+}
 
 
 

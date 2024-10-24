@@ -30,21 +30,19 @@ export const addMessage = async (req, res) => {
       }
     });
 
-    // Fetch user details to include in the response
     const sender = await prisma.user.findUnique({
       where: {
         id: userId
       },
       select: {
         id: true,
-        username: true // Assuming you have a username field
+        username: true
       }
     });
 
-    // Include sender details in the response
     res.status(200).json({
       ...newMessage,
-      sender: sender.username // Include the sender's username in the response
+      sender: sender.username
     });
   } catch (err) {
     console.error(err);
